@@ -17,6 +17,15 @@ struct DataGenerator {
     }
     
     static func generateData(_ number: Int) {
+        let context = PersistenceController.shared.container.viewContext
+
+        for count in 0..<number {
+            let newItem = Item(context: context)
+            newItem.timestamp = Date()
+            newItem.title = String(count)
+        }
+        
+        try? context.save()
         print("\(number) generated")
     }
     

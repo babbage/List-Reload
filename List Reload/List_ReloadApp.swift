@@ -13,7 +13,7 @@ struct List_ReloadApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentViewB()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

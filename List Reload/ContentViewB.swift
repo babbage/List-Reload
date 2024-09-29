@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  ContentViewB.swift
 //  List Reload
 //
 //  Created by Duncan Babbage on 30/09/2024.
@@ -8,21 +8,23 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct ContentViewB: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
+        animation: .default
+    )
+    
     private var items: FetchedResults<Item>
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
-                    RowView(item: item)
-                }
-                .onDelete(perform: deleteItems)
+            List(items) { item in
+                RowView(
+                    title: item.title!,
+                    timestamp: itemFormatter.string(from: item.timestamp!)
+                )
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -81,20 +83,21 @@ private let itemFormatter: DateFormatter = {
     ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
 
-var rowInitCountA = 0
+var rowInitCountB = 0
 
 private struct RowView: View {
-    let item: Item
+    let title: String
+    let timestamp: String
     
     var body: some View {
-        let _ = rowInitCountA += 1
+        let _ = rowInitCountB += 1
         
         NavigationLink {
-            Text("\(item.title ?? "Title") at \(item.timestamp!, formatter: itemFormatter)")
+            Text("\(title) at \(timestamp)")
         } label: {
-            Text("Item \(item.title ?? "Title")")
+            Text("Item \(title)")
         }
 
-        let _ = print("Row body evaluated: \(rowInitCountA)")
+        let _ = print("Row body evaluated: \(rowInitCountB)")
     }
 }
