@@ -19,54 +19,13 @@ struct ContentViewB: View {
     private var items: FetchedResults<Item>
 
     var body: some View {
-        NavigationView {
-            List(items) { item in
-                RowView(
-                    title: item.title!,
-                    timestamp: itemFormatter.string(from: item.timestamp!)
-                )
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+//        NavigationView {
+        List {
+            ForEach(items, id: \.self) { item in
+                let _ = rowInitCountB += 1
+                Text("B")
+                let _ = print("ContentViewB item body evaluated: \(rowInitCountB)")
+                // RowView(item: item)
             }
         }
     }
@@ -79,25 +38,23 @@ private let itemFormatter: DateFormatter = {
     return formatter
 }()
 
-#Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
-
-var rowInitCountB = 0
+ var rowInitCountB = 0
 
 private struct RowView: View {
-    let title: String
-    let timestamp: String
+    let item: Item
     
     var body: some View {
-        let _ = rowInitCountB += 1
         
-        NavigationLink {
-            Text("\(title) at \(timestamp)")
-        } label: {
-            Text("Item \(title)")
-        }
+//        NavigationLink {
+            Text("B") //\(item.title ?? "Title") at \(item.timestamp!, formatter: itemFormatter)")
+//        } label: {
+//            Text("Item \(item.title ?? "Title")")
+//        }
 
-        let _ = print("Row body evaluated: \(rowInitCountB)")
+        let _ = print("ContentViewB row body evaluated")
     }
+}
+
+#Preview {
+    ContentViewB().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  ContentViewA.swift
 //  List Reload
 //
 //  Created by Duncan Babbage on 30/09/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct ContentViewA: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
@@ -17,25 +17,25 @@ struct ContentView: View {
     private var items: FetchedResults<Item>
 
     var body: some View {
-        NavigationView {
+//        NavigationView {
             List {
                 ForEach(items) { item in
                     RowView(item: item)
                 }
                 .onDelete(perform: deleteItems)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-            Text("Select an item")
-        }
+//            .toolbar {
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    EditButton()
+//                }
+//                ToolbarItem {
+//                    Button(action: addItem) {
+//                        Label("Add Item", systemImage: "plus")
+//                    }
+//                }
+//            }
+//            Text("Select an item")
+//        }
     }
 
     private func addItem() {
@@ -78,7 +78,7 @@ private let itemFormatter: DateFormatter = {
 }()
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ContentViewA().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
 
 var rowInitCountA = 0
@@ -95,6 +95,6 @@ private struct RowView: View {
             Text("Item \(item.title ?? "Title")")
         }
 
-        let _ = print("Row body evaluated: \(rowInitCountA)")
+        let _ = print("ContentViewA row body evaluated: \(rowInitCountA)")
     }
 }
