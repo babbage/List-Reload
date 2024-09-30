@@ -8,6 +8,8 @@
 import SwiftUI
 import CoreData
 
+/// With the ForEach called with a subview RowView for each item, the RowView body init method will be called
+/// 6,500 times, once for each item in the Core Data store, even though only around 17 rows will initially be displayed.
 struct ContentViewA: View {
     @Environment(\.managedObjectContext) private var viewContext
 
@@ -17,54 +19,11 @@ struct ContentViewA: View {
     private var items: FetchedResults<Item>
 
     var body: some View {
-//        NavigationView {
+        NavigationView {
             List {
-                ForEach(items) { item in
+                ForEach(items, id:\.self) { item in
                     RowView(item: item)
                 }
-                .onDelete(perform: deleteItems)
-            }
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    EditButton()
-//                }
-//                ToolbarItem {
-//                    Button(action: addItem) {
-//                        Label("Add Item", systemImage: "plus")
-//                    }
-//                }
-//            }
-//            Text("Select an item")
-//        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
     }
@@ -77,17 +36,13 @@ private let itemFormatter: DateFormatter = {
     return formatter
 }()
 
-#Preview {
-    ContentViewA().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
-
-var rowInitCountA = 0
-
 private struct RowView: View {
+    static var rowInitCount = 0
+
     let item: Item
     
     var body: some View {
-        let _ = rowInitCountA += 1
+        let _ = RowView.rowInitCount += 1
         
         NavigationLink {
             Text("\(item.title ?? "Title") at \(item.timestamp!, formatter: itemFormatter)")
@@ -95,6 +50,10 @@ private struct RowView: View {
             Text("Item \(item.title ?? "Title")")
         }
 
-        let _ = print("ContentViewA row body evaluated: \(rowInitCountA)")
+        let _ = print("ContentViewA row body evaluated: \(RowView.rowInitCount)")
     }
+}
+
+#Preview {
+    ContentViewA().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

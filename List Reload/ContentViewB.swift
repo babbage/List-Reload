@@ -8,53 +8,35 @@
 import SwiftUI
 import CoreData
 
+/// Simplifying the RowView content, and removing the NavigationView and NavigationLink does not change anything,
+/// the RowView body is still called 6,500 times, once for each item in the Core Data store.
 struct ContentViewB: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default
-    )
-    
+        animation: .default)
     private var items: FetchedResults<Item>
 
     var body: some View {
-//        NavigationView {
         List {
-            ForEach(items, id: \.self) { item in
-                let _ = rowInitCountB += 1
-                Text("B")
-                let _ = print("ContentViewB item body evaluated: \(rowInitCountB)")
-                // RowView(item: item)
+            ForEach(items, id:\.self) { item in
+                RowView()
             }
         }
     }
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
-
- var rowInitCountB = 0
-
 private struct RowView: View {
-    let item: Item
-    
-    var body: some View {
-        
-//        NavigationLink {
-            Text("B") //\(item.title ?? "Title") at \(item.timestamp!, formatter: itemFormatter)")
-//        } label: {
-//            Text("Item \(item.title ?? "Title")")
-//        }
+    static var rowInitCount = 0
 
-        let _ = print("ContentViewB row body evaluated")
+    var body: some View {
+        let _ = RowView.rowInitCount += 1
+        Text("B")
+        let _ = print("ContentViewB row body evaluated: \(RowView.rowInitCount)")
     }
 }
 
 #Preview {
-    ContentViewB().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ContentViewA().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

@@ -8,7 +8,12 @@
 import SwiftUI
 import CoreData
 
+/// Moving the full contents of the origincal RowView to be directly inside the ForEach reduces the nuumber of times
+/// the body is rendered to around 38 times, when 17 rows are being displayed. As with all other ifndings, seen on both
+/// iPhone 15 Pro Max on iOS 18 plus iPhone 16 Pro simulator on iOS 18.1.
 struct ContentViewC: View {
+    static var rowInitCount = 0
+
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
@@ -21,8 +26,8 @@ struct ContentViewC: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(items, id: \.objectID) { item in
-                    let _ = rowInitCountC += 1
+                ForEach(items, id: \.self) { item in
+                    let _ = ContentViewC.rowInitCount += 1
                     
                     NavigationLink {
                         Text("\(item.title ?? "Title") at \(item.timestamp!, formatter: itemFormatter)")
@@ -30,14 +35,12 @@ struct ContentViewC: View {
                         Text("Item \(item.title ?? "Title")")
                     }
 
-                    let _ = print("ContentViewC row body evaluated: \(rowInitCountC)")
+                    let _ = print("ContentViewC row body evaluated: \(ContentViewC.rowInitCount)")
                 }
             }
         }
     }
 }
-
-var rowInitCountC = 0
 
 private let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()

@@ -13,7 +13,8 @@ struct List_ReloadApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentViewD()
+            // Set the ContentView variant here to test alternate scenarios
+            ContentViewA()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
