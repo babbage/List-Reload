@@ -19,5 +19,8 @@ Making RowView Equatable and specifying .equatable() within the ForEach enables 
 **ContentViewE:**
 With RowView Equatable and specifying .equatable() within the ForEach, the correct lazy loading behaviour of the ForEach is still observed with a more complex view that is within a NavigationView: only 18 row bodies are evaluated on initial launch, just the views that are initially dispalyed on the screen.
 
+**ContentViewF:**
+An Equatable view can't have an @ObservedObject variable. However, by wrapping the contents of RowView in a RowViewContent view, RowView can be equatable leading to only 18 rows initially being rendered, while RowViewContent can continue to have an @ObservedObject where this is desirable.
+
 
 All scenarios seen on both iPhone 15 Pro Max physical device on iOS 18 plus iPhone 16 Pro simulator on iOS 18.1.

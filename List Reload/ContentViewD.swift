@@ -49,5 +49,5 @@ private struct RowView: View, Equatable {
 }
 
 #Preview {
-    ContentViewA().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ContentViewD().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
