@@ -16,5 +16,8 @@ Moving the full contents of the origincal RowView to be directly inside the ForE
 **ContentViewD:**
 Making RowView Equatable and specifying .equatable() within the ForEach enables the use of a subview while still getting the correct lazy loading behaviour of the ForEach: only 18 row bodies are evaluated on initial launch, just the views that are initially dispalyed on the screen.
 
+**ContentViewE:**
+With RowView Equatable and specifying .equatable() within the ForEach, the correct lazy loading behaviour of the ForEach is still observed with a more complex view that is within a NavigationView: only 18 row bodies are evaluated on initial launch, just the views that are initially dispalyed on the screen.
+
 
 All scenarios seen on both iPhone 15 Pro Max physical device on iOS 18 plus iPhone 16 Pro simulator on iOS 18.1.
