@@ -1,5 +1,7 @@
 Sample project to demonstrate SwiftUI's lazy loading behaviour in a ForEach when the `.equatable()` modifier is used, and more particularly the lack of lazy loading when it is not.
 
+> NOTE: As of Xcode 16, every SwiftUI view is wrapped in an AnyView *in debug builds only*—[info via Curt Clifton from Apple on Mastodon](https://indieweb.social/@curtclifton/113273571392595819). This is stated to speed switching between previews, simulator, and device, but subverts some List optimizations when running in Debug mode. Wrapping in Equatable, as demonstrated in these examples, is stated to be likely to make performance worse in release builds as it introduces an extra view in the hierarchy for every row. The new debug behaviour meanwhile can be disabled by setting a custom build setting: `SWIFT_ENABLE_OPAQUE_TYPE_ERASURE=NO`
+
 The project will automatically populate a Core Data store for the app with 6,500 items on first launch. In `List_ReloadApp.swift`, set the scenario you want to see by setting the `ContentViewA()` to the B, C or D variants. 
 
 The expected behaviour is described in brief documentation at the top of each of those files, and is:
